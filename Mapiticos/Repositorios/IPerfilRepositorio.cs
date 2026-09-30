@@ -2,10 +2,10 @@
 
 namespace Mapiticos.Repositorios
 {
-    // El "contrato": qué puede hacer el repositorio de perfiles.
-    // El controlador solo conoce esto, no cómo se hace por dentro.
     public interface IPerfilRepositorio
     {
         Task<PerfilViewModel?> ObtenerPerfilAsync(string usuarioId);
+        Task<EditarPerfilViewModel?> ObtenerParaEditarAsync(string usuarioId);
+        Task GuardarAsync(string usuarioId, EditarPerfilViewModel datos);
     }
 }

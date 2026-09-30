@@ -1,0 +1,104 @@
+﻿@model Mapiticos.Models.ViewModels.EditarPerfilViewModel
+@{
+    ViewData["Title"] = "Editar perfil";
+    var tieneAvatar = !string.IsNullOrEmpty(Model.AvatarUrl);
+}
+
+<div class="editar-perfil">
+    <header class="editar-encabezado">
+        <a asp-action="Index" class="boton-icono" aria-label="Volver al perfil">
+            <i class="ti ti-arrow-left"></i>
+        </a>
+        <h1>Editar perfil</h1>
+    </header>
+
+    <form asp-action="Editar" method="post" class="formulario">
+        <div asp-validation-summary="ModelOnly" class="resumen-errores"></div>
+
+        <!-- ===== Avatar ===== -->
+        <fieldset class="campo-grupo">
+            <legend>Avatar</legend>
+
+            <input type="hidden" id="AvatarUrl" name="AvatarUrl" value="@Model.AvatarUrl" />
+
+            <div class="avatar-modos">
+                <label class="avatar-modo">
+                    <input type="radio" name="modoAvatar" value="inicial" checked="@(!tieneAvatar)" />
+                    <span>Mi inicial</span>
+                </label>
+                <label class="avatar-modo">
+                    <input type="radio" name="modoAvatar" value="personalizado" checked="@tieneAvatar" />
+                    <span>Crear mi avatar</span>
+                </label>
+            </div>
+
+            <div class="avatar-vista">
+                <span id="avatar-inicial" class="avatar-grande avatar-inicial" aria-hidden="true">@Model.Inicial</span>
+                <img id="avatar-imagen" class="avatar-grande" alt="Vista previa de tu avatar" hidden />
+            </div>
+
+            <div id="avatar-editor" class="avatar-editor" hidden>
+                <div id="avatar-partes" class="avatar-partes"></div>
+                <div id="avatar-colores" class="avatar-colores"></div>
+                <button type="button" id="avatar-azar" class="boton-secundario boton-pequeno">
+                    <i class="ti ti-dice-5" aria-hidden="true"></i>Al azar
+                </button>
+                <p class="avatar-creditos">
+                    Avatares: estilo
+                    <a href="https://www.figma.com/community/file/1184595184137881796" target="_blank" rel="noopener">Adventurer</a>
+                    de Lisa Wischofsky,
+                    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>,
+                    vía <a href="https://www.dicebear.com" target="_blank" rel="noopener">DiceBear</a>.
+                </p>
+            </div>
+
+            <span asp-validation-for="AvatarUrl" class="error"></span>
+        </fieldset>
+
+        <!-- ===== Nombre ===== -->
+        <div class="campo">
+            <label asp-for="NombreMostrar"></label>
+            <input asp-for="NombreMostrar" maxlength="100" autocomplete="nickname" />
+            <span asp-validation-for="NombreMostrar" class="error"></span>
+        </div>
+
+        <!-- ===== Bio ===== -->
+        <div class="campo">
+            <label asp-for="Biografia"></label>
+            <textarea asp-for="Biografia" rows="3" maxlength="300"
+                      placeholder="Contá un poco sobre vos y tus aventuras favoritas."
+                      aria-describedby="contador-bio"></textarea>
+            <small id="contador-bio" class="campo-contador"><span id="contador-numero">0</span>/300</small>
+            <span asp-validation-for="Biografia" class="error"></span>
+        </div>
+
+        <!-- ===== Privacidad ===== -->
+        <label class="interruptor">
+            <input asp-for="EsPrivada" type="checkbox" role="switch" />
+            <span class="interruptor-texto">
+                <strong>Cuenta privada</strong>
+                <small>Solo las personas que aceptés van a poder ver tus aventuras.</small>
+            </span>
+        </label>
+
+        <div class="formulario-acciones">
+            <a asp-action="Index" class="boton-secundario">Cancelar</a>
+            <button type="submit" class="boton-principal">Guardar cambios</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/editor-avatar.js" asp-append-version="true"></script>
+    <script>
+        // Contador de caracteres de la bio
+        (function () {
+            const bio = document.getElementById('Biografia');
+            const numero = document.getElementById('contador-numero');
+            const actualizar = () => numero.textContent = bio.value.length;
+            bio.addEventListener('input', actualizar);
+            actualizar();
+        })();
+    </script>
+}

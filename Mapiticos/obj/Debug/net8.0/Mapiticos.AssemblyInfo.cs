@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mapiticos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76cdf2da0d37a7aacf207c46f3bc188f3e6825ff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7cb3788c1be3e3070758b3ebf64046fb9b586539")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mapiticos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mapiticos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

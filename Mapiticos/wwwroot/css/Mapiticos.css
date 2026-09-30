@@ -1099,3 +1099,430 @@ button {
         min-height: 100vh;
     }
 }
+/* ===== Editar perfil ===== */
+.editar-perfil {
+    width: 100%;
+    padding: 0 16px 24px;
+}
+
+.editar-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0 12px;
+}
+
+    .editar-encabezado h1 {
+        margin: 0;
+        font-family: var(--fuente-titulos);
+        font-weight: 800;
+        font-size: 24px;
+    }
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo-grupo {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
+    .campo-grupo legend {
+        float: none;
+        width: auto;
+        margin: 0 0 10px;
+        padding: 0;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+.avatares {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 12px;
+}
+
+.avatar-opcion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+    .avatar-opcion input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+
+.avatar-muestra {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--salvia-clara);
+    border: 3px solid transparent;
+    transition: border-color 0.15s ease;
+}
+
+.avatar-inicial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--musgo);
+    color: var(--blanco);
+    font-family: var(--fuente-titulos);
+    font-weight: 800;
+    font-size: 26px;
+}
+
+.avatar-nombre {
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+.avatar-opcion input:checked + .avatar-muestra {
+    border-color: var(--bosque);
+    box-shadow: 0 0 0 3px var(--salvia-clara);
+}
+
+.avatar-opcion input:focus-visible + .avatar-muestra {
+    outline: 3px solid var(--musgo);
+    outline-offset: 2px;
+}
+
+.campo textarea {
+    border: 1.5px solid #C7D3B2;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--bosque);
+    background: var(--neblina);
+    resize: vertical;
+    min-height: 96px;
+}
+
+    .campo textarea:focus {
+        outline: none;
+        border-color: var(--musgo);
+        background: var(--blanco);
+        box-shadow: 0 0 0 3px rgba(78, 107, 58, 0.2);
+    }
+
+.campo-contador {
+    align-self: flex-end;
+}
+
+.error, .field-validation-error {
+    font-size: 13px;
+    font-weight: 600;
+    color: #A1321F;
+}
+
+.resumen-errores ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #A1321F;
+}
+
+.interruptor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    background: var(--blanco);
+    cursor: pointer;
+}
+
+.interruptor-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+    .interruptor-texto small {
+        font-size: 13px;
+        color: var(--texto-suave);
+    }
+
+.interruptor input {
+    order: 2;
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    width: 48px;
+    height: 28px;
+    flex-shrink: 0;
+    margin: 0;
+    border-radius: 14px;
+    background: #C7D3B2;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+    .interruptor input::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--blanco);
+        transition: transform 0.15s ease;
+    }
+
+    .interruptor input:checked {
+        background: var(--bosque);
+    }
+
+        .interruptor input:checked::after {
+            transform: translateX(20px);
+        }
+
+    .interruptor input:focus-visible {
+        outline: 3px solid var(--musgo);
+        outline-offset: 2px;
+    }
+
+.formulario-acciones {
+    display: flex;
+    gap: 10px;
+}
+
+    .formulario-acciones > * {
+        flex: 1;
+    }
+
+.mensaje-exito {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 16px 8px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: var(--salvia-clara);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.perfil-avatar img {
+    background: var(--salvia-clara);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .avatar-muestra, .interruptor input, .interruptor input::after {
+        transition: none;
+    }
+}
+
+@media (min-width: 900px) {
+    .editar-perfil {
+        max-width: 560px;
+        margin: 0 auto;
+        padding-top: 16px;
+    }
+
+    .mensaje-exito {
+        margin: 0 16px 8px 32px;
+    }
+}
+/* ===== Editor de avatar por partes ===== */
+[hidden] {
+    display: none !important;
+}
+
+.avatar-modos {
+    display: flex;
+    padding: 4px;
+    margin-bottom: 16px;
+    background: var(--blanco);
+    border: 1px solid var(--borde);s
+    border-radius: 24px;
+}
+
+.avatar-modo {
+    position: relative;
+    flex: 1;
+    cursor: pointer;
+}
+
+    .avatar-modo input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+
+    .avatar-modo span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .avatar-modo input:checked + span {
+        background: var(--bosque);
+        color: var(--blanco);
+        font-weight: 700;
+    }
+
+    .avatar-modo input:focus-visible + span {
+        outline: 3px solid var(--musgo);
+        outline-offset: 2px;
+    }
+
+.avatar-vista {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.avatar-grande {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--salvia-clara);
+}
+
+    .avatar-grande.avatar-inicial {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--musgo);
+        color: var(--blanco);
+        font-family: var(--fuente-titulos);
+        font-weight: 800;
+        font-size: 56px;
+    }
+
+.avatar-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: 20px;
+    background: var(--blanco);
+}
+
+.avatar-partes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+}
+
+.parte-fila {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.parte-nombre {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.parte-valor {
+    min-width: 72px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--texto-suave);
+}
+
+.parte-boton {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid #C7D3B2;
+    background: var(--neblina);
+    color: var(--bosque);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+    .parte-boton:hover {
+        background: var(--salvia-clara);
+    }
+
+.avatar-colores {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.color-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.color-grupo-nombre {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.muestras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.muestra {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--blanco);
+    box-shadow: 0 0 0 1px #C7D3B2;
+}
+
+    .muestra[aria-pressed="true"] {
+        box-shadow: 0 0 0 3px var(--bosque);
+    }
+
+    .muestra:focus-visible {
+        outline: 3px solid var(--musgo);
+        outline-offset: 3px;
+    }
+
+#avatar-azar {
+    align-self: flex-start;
+    gap: 8px;
+}
+
+.avatar-creditos {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--texto-suave);
+}
+
+    .avatar-creditos a {
+        text-decoration: underline;
+    }
+
+@media (min-width: 600px) {
+    .avatar-partes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 24px;
+    }
+}

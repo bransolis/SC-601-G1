@@ -14,9 +14,9 @@
             @Model.NombreUsuario
         </h1>
         <div class="encabezado-acciones">
-            <button type="button" class="boton-icono" aria-label="Configuración">
+            <a asp-action="Editar" class="boton-icono" aria-label="Configuración">
                 <i class="ti ti-adjustments-horizontal"></i>
-            </button>
+            </a>
             <form asp-area="Identity" asp-page="/Account/Logout"
                   asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
                 <button type="submit" class="boton-icono" aria-label="Cerrar sesión">
@@ -25,6 +25,14 @@
             </form>
         </div>
     </header>
+
+    @* Mensaje de confirmación después de guardar (aparece una sola vez) *@
+    @if (TempData["Mensaje"] is string mensaje)
+    {
+        <p class="mensaje-exito" role="status">
+            <i class="ti ti-circle-check" aria-hidden="true"></i>@mensaje
+        </p>
+    }
 
     <section class="perfil-cabecera">
         <div class="perfil-avatar" aria-hidden="true">
@@ -53,8 +61,7 @@
     </section>
 
     <div class="perfil-botones">
-        <button type="button" class="boton-suave"><i class="ti ti-edit"></i>Editar perfil</button>
-
+        <a asp-action="Editar" class="boton-suave"><i class="ti ti-edit"></i>Editar perfil</a>
     </div>
 
     @if (!Model.Aventuras.Any())

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SvJzUi2yjNw=",
+  "dgSpecHash": "oD818MKHRTA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\danir\\OneDrive\\Desktop\\Coding_Github\\SC-601-G1\\Mapiticos\\Mapiticos.csproj",
+  "projectFilePath": "C:\\Coding_Github\\SC-601-G1\\Mapiticos\\Mapiticos.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\danir\\.nuget\\packages\\azure.core\\1.41.0\\azure.core.1.41.0.nupkg.sha512",
     "C:\\Users\\danir\\.nuget\\packages\\azure.identity\\1.12.1\\azure.identity.1.12.1.nupkg.sha512",
