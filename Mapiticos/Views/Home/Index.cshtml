@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Bienvenida";
+}
+
+<div class="landing">
+
+    <header class="landing-barra">
+        <img src="~/img/logo.png" alt="Mapiticos" class="landing-barra-logo" />
+        <a asp-area="Identity" asp-page="/Account/Login" class="boton-secundario boton-pequeno">Iniciar sesión</a>
+    </header>
+
+    <!-- Portada -->
+    <section class="hero">
+        <div class="hero-texto">
+            <h1>Descubrí Costa Rica, un pin a la vez.</h1>
+            <p>
+                Mapiticos es un mapa social de Costa Rica. Guardá los lugares que visitás,
+                encontrá senderos, cafés y miradores nuevos, y mirá a dónde van tus amigos.
+            </p>
+            <ul class="inicio-etiquetas" aria-label="Tipos de aventuras">
+                <li><i class="ti ti-mountain"></i>Hiking</li>
+                <li><i class="ti ti-coffee"></i>Café</li>
+                <li><i class="ti ti-basket"></i>Picnic</li>
+                <li><i class="ti ti-run"></i>Correr</li>
+                <li><i class="ti ti-sunset"></i>Vista</li>
+            </ul>
+            <div class="hero-acciones">
+                <a href="#registro" class="boton-principal">Crear mi cuenta</a>
+                <a href="#funciones" class="boton-secundario">Ver qué podés hacer</a>
+            </div>
+        </div>
+        <img src="~/img/logo.png" alt="" class="hero-logo" />
+    </section>
+
+    <!-- Funciones -->
+    <section id="funciones" class="seccion">
+        <h2>Todo lo que podés hacer</h2>
+        <div class="funciones">
+            <article class="funcion">
+                <span class="funcion-icono"><i class="ti ti-map-pin"></i></span>
+                <h3>Poné tus pines</h3>
+                <p>Marcá en el mapa cada lugar que visitás, con fotos y una breve descripción.</p>
+            </article>
+            <article class="funcion">
+                <span class="funcion-icono"><i class="ti ti-tags"></i></span>
+                <h3>Etiquetá tus aventuras</h3>
+                <p>Hiking, café, picnic, vista… y filtrá el mapa para encontrar justo lo que buscás.</p>
+            </article>
+            <article class="funcion">
+                <span class="funcion-icono"><i class="ti ti-users"></i></span>
+                <h3>Seguí a tus amigos</h3>
+                <p>Mirá sus aventuras en tu feed y abrí cualquier lugar directo en el mapa.</p>
+            </article>
+            <article class="funcion">
+                <span class="funcion-icono"><i class="ti ti-checklist"></i></span>
+                <h3>Armá tu lista</h3>
+                <p>Guardá los lugares que querés conocer y marcalos cuando ya fuiste.</p>
+            </article>
+            <article class="funcion">
+                <span class="funcion-icono"><i class="ti ti-map-2"></i></span>
+                <h3>Completá las 7 provincias</h3>
+                <p>Mirá cuántas provincias llevás visitadas y cuáles te faltan por explorar.</p>
+            </article>
+            <article class="funcion">
+                <span class="funcion-icono"><i class="ti ti-lock"></i></span>
+                <h3>Vos decidís quién ve</h3>
+                <p>Cuenta pública o privada, y aventuras que podés guardar solo para vos.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="seccion">
+        <h2>Cómo funciona</h2>
+        <ol class="pasos">
+            <li class="paso">
+                <span class="paso-numero" aria-hidden="true">1</span>
+                <div>
+                    <h3>Creá tu perfil</h3>
+                    <p>Elegí tu avatar y contá un poco sobre vos.</p>
+                </div>
+            </li>
+            <li class="paso">
+                <span class="paso-numero" aria-hidden="true">2</span>
+                <div>
+                    <h3>Subí tu primera aventura</h3>
+                    <p>Poné el pin, agregá fotos y sus etiquetas.</p>
+                </div>
+            </li>
+            <li class="paso">
+                <span class="paso-numero" aria-hidden="true">3</span>
+                <div>
+                    <h3>Descubrí y seguí</h3>
+                    <p>Explorá el mapa, seguí a otras personas y armá tu lista de pendientes.</p>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <!-- Registro -->
+    <section id="registro" class="seccion registro">
+        <div class="registro-texto">
+            <h2>Empezá tu mapa hoy</h2>
+            <p>Crear tu cuenta es gratis y toma menos de un minuto.</p>
+        </div>
+
+        <form class="registro-form" asp-area="Identity" asp-page="/Account/Register" method="post">
+            <div class="campo">
+                <label for="correo">Correo electrónico</label>
+                <input id="correo" name="Input.Email" type="email" autocomplete="email"
+                       placeholder="tucorreo@ejemplo.com" required />
+            </div>
+            <div class="campo">
+                <label for="clave">Contraseña</label>
+                <input id="clave" name="Input.Password" type="password" autocomplete="new-password"
+                       minlength="6" aria-describedby="clave-ayuda" required />
+                <small id="clave-ayuda">Mínimo 6 caracteres, con mayúscula, minúscula, número y símbolo.</small>
+            </div>
+            <div class="campo">
+                <label for="clave2">Confirmá la contraseña</label>
+                <input id="clave2" name="Input.ConfirmPassword" type="password" autocomplete="new-password" required />
+            </div>
+            <button type="submit" class="boton-principal">Crear mi cuenta</button>
+            <p class="registro-login">
+                ¿Ya tenés cuenta? <a asp-area="Identity" asp-page="/Account/Login">Iniciá sesión</a>
+            </p>
+        </form>
+    </section>
+
+    <footer class="landing-pie">Mapiticos, proyecto del curso SC-601</footer>
+</div>

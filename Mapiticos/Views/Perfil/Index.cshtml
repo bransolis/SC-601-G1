@@ -1,0 +1,87 @@
+﻿@model Mapiticos.Models.ViewModels.PerfilViewModel
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<div class="perfil">
+
+    <header class="perfil-barra">
+        <h1 class="perfil-usuario">
+            @if (Model.EsPrivada)
+            {
+                <i class="ti ti-lock" aria-label="Cuenta privada"></i>
+            }
+            @Model.NombreUsuario
+        </h1>
+        <div class="encabezado-acciones">
+            <button type="button" class="boton-icono" aria-label="Configuración">
+                <i class="ti ti-adjustments-horizontal"></i>
+            </button>
+            <form asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
+                <button type="submit" class="boton-icono" aria-label="Cerrar sesión">
+                    <i class="ti ti-logout"></i>
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <section class="perfil-cabecera">
+        <div class="perfil-avatar" aria-hidden="true">
+            @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <img src="@Model.AvatarUrl" alt="" />
+            }
+            else
+            {
+                @Model.Inicial
+            }
+        </div>
+        <ul class="perfil-stats">
+            <li><strong>@Model.CantidadAventuras</strong><span>Aventuras</span></li>
+            <li><strong>@Model.CantidadSeguidores</strong><span>Seguidores</span></li>
+            <li><strong>@Model.CantidadSiguiendo</strong><span>Siguiendo</span></li>
+        </ul>
+    </section>
+
+    <section class="perfil-info">
+        <h2>@Model.NombreMostrar</h2>
+        @if (!string.IsNullOrEmpty(Model.Biografia))
+        {
+            <p>@Model.Biografia</p>
+        }
+    </section>
+
+    <div class="perfil-botones">
+        <button type="button" class="boton-suave"><i class="ti ti-edit"></i>Editar perfil</button>
+
+    </div>
+
+    @if (!Model.Aventuras.Any())
+    {
+        <div class="vacio">
+            <p>Todavía no has subido aventuras. ¡Poné tu primer pin en el mapa!</p>
+        </div>
+    }
+    else
+    {
+        <div class="perfil-grid">
+            @foreach (var a in Model.Aventuras)
+            {
+                <a asp-controller="Mapa" asp-action="Index" asp-route-aventuraId="@a.AventuraId" class="miniatura">
+                    @if (!string.IsNullOrEmpty(a.FotoUrl))
+                    {
+                        <img src="@a.FotoUrl" alt="" />
+                    }
+                    <span class="miniatura-etiquetas">
+                        @foreach (var e in a.Etiquetas)
+                        {
+                            <span title="@e.Nombre"><i class="ti @e.Icono" aria-hidden="true"></i></span>
+                        }
+                    </span>
+                    <span class="miniatura-titulo">@a.Titulo</span>
+                </a>
+            }
+        </div>
+    }
+</div>

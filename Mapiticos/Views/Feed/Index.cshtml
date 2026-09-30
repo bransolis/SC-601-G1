@@ -1,0 +1,92 @@
+﻿@model List<Mapiticos.Models.ViewModels.PublicacionFeedViewModel>
+@{
+    ViewData["Title"] = "Feed";
+}
+
+<div class="feed">
+    <header class="encabezado">
+        <img src="~/img/logo.png" alt="Mapiticos" class="logo" />
+        <div class="encabezado-acciones">
+            <button type="button" class="boton-icono" aria-label="Buscar personas">
+                <i class="ti ti-search"></i>
+            </button>
+
+            @* TEMPORAL: luego se mueve a Perfil > Configuración *@
+            <form asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
+                <button type="submit" class="boton-icono" aria-label="Cerrar sesión">
+                    <i class="ti ti-logout"></i>
+                </button>
+            </form>
+        </div>
+    </header>
+
+    @if (!Model.Any())
+    {
+        <div class="vacio">
+            <p>Todavía no hay publicaciones. Seguí a otras personas para ver sus aventuras aquí.</p>
+        </div>
+    }
+
+    @foreach (var p in Model)
+    {
+        <article class="publicacion">
+            <div class="publicacion-encabezado">
+                <div class="avatar" aria-hidden="true">
+                    @if (!string.IsNullOrEmpty(p.AvatarUrl))
+                    {
+                        <img src="@p.AvatarUrl" alt="" />
+                    }
+                    else
+                    {
+                        @p.Inicial
+                    }
+                </div>
+                <div class="publicacion-autor">
+                    <strong>@p.NombreUsuario</strong>
+                    <span class="publicacion-lugar"><i class="ti ti-map-pin"></i>@p.Lugar</span>
+                </div>
+                <a asp-controller="Mapa" asp-action="Index" asp-route-aventuraId="@p.AventuraId" class="boton-chip">
+                    <i class="ti ti-map"></i>Ver en el mapa
+                </a>
+            </div>
+
+            <div class="publicacion-foto">
+                @if (!string.IsNullOrEmpty(p.FotoUrl))
+                {
+                    <img src="@p.FotoUrl" alt="Foto de @p.NombreUsuario en @p.Lugar" />
+                }
+                else
+                {
+                    <div class="foto-vacia"><i class="ti ti-photo"></i></div>
+                }
+                <ul class="etiquetas" aria-label="Etiquetas">
+                    @foreach (var e in p.Etiquetas)
+                    {
+                        <li><i class="ti @e.Icono"></i>@e.Nombre</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="publicacion-acciones">
+                <button type="button" class="accion @(p.LeDiLike ? "activo" : "")"
+                        aria-label="Me gusta" aria-pressed="@(p.LeDiLike ? "true" : "false")">
+                    <i class="ti ti-heart"></i>
+                </button>
+                <button type="button" class="accion" aria-label="Comentar">
+                    <i class="ti ti-message-circle"></i>
+                </button>
+                <span class="espaciador"></span>
+                <button type="button" class="accion accion-texto">
+                    <i class="ti ti-eye-off"></i>Ocultar
+                </button>
+            </div>
+
+            <div class="publicacion-texto">
+                <strong>@p.CantidadLikes me gusta</strong>
+                <p><strong>@p.NombreUsuario</strong> @p.Descripcion</p>
+                <span class="tiempo">@p.TiempoTranscurrido</span>
+            </div>
+        </article>
+    }
+</div>
