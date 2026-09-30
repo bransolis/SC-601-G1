@@ -5,6 +5,11 @@ namespace Mapiticos.Models.ViewModels
 {
     public class EditarPerfilViewModel
     {
+        [Required(ErrorMessage = "Elegí un nombre de usuario.")]
+        [RegularExpression(ReglasNombreUsuario.Patron, ErrorMessage = ReglasNombreUsuario.MensajeFormato)]
+        [Display(Name = "Nombre de usuario")]
+        public string NombreUsuario { get; set; } = "";
+
         [Required(ErrorMessage = "Escribí cómo querés que te llamen.")]
         [StringLength(100, ErrorMessage = "Máximo 100 caracteres.")]
         [Display(Name = "Nombre para mostrar")]
@@ -18,9 +23,6 @@ namespace Mapiticos.Models.ViewModels
 
         [Display(Name = "Cuenta privada")]
         public bool EsPrivada { get; set; }
-
-        // Solo para mostrar en la pantalla
-        public string NombreUsuario { get; set; } = "";
 
         public string Inicial =>
             string.IsNullOrEmpty(NombreMostrar) ? "?" : NombreMostrar[..1].ToUpper();
@@ -38,20 +40,12 @@ namespace Mapiticos.Models.ViewModels
             "features", "featuresProbability", "backgroundColor"
         };
 
-        // Solo letras y números (ej: short05, variant12, f2d3b1, 100)
         private static readonly Regex ValorSeguro = new("^[a-zA-Z0-9]{1,20}$");
 
         public static bool EsValido(string? url)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                return true; // sin avatar = se usa la inicial
-            }
-
-            if (url.Length > 400 || !url.StartsWith(Prefijo, StringComparison.Ordinal))
-            {
-                return false;
-            }
+            if (string.IsNullOrEmpty(url)) return true;
+            if (url.Length > 400 || !url.StartsWith(Prefijo, StringComparison.Ordinal)) return false;
 
             var consulta = url.Substring(Prefijo.Length);
             foreach (var par in consulta.Split('&', StringSplitOptions.RemoveEmptyEntries))
@@ -64,7 +58,6 @@ namespace Mapiticos.Models.ViewModels
                     return false;
                 }
             }
-
             return true;
         }
     }

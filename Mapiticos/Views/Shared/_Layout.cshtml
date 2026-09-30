@@ -12,7 +12,7 @@
 <body>
     @{
         var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
-        var conSesion = User.Identity?.IsAuthenticated == true;
+        var conSesion = User.Identity?.IsAuthenticated == true && ViewData["OcultarMenu"] as bool? != true;
     }
     <div class="app @(conSesion ? "con-menu" : "")">
         <main class="app-contenido">

@@ -1,0 +1,40 @@
+﻿@model Mapiticos.Models.ViewModels.ElegirUsuarioViewModel
+@{
+    ViewData["Title"] = "Elegí tu usuario";
+    ViewData["OcultarMenu"] = true;
+}
+
+<section class="elegir-usuario">
+    <img src="~/img/logo.png" alt="Mapiticos" class="elegir-logo" />
+
+    <h1>Elegí tu @@usuario</h1>
+    <p>Así te van a encontrar tus amigos en Mapiticos. Lo podés cambiar después en Editar perfil.</p>
+
+    <form asp-action="ElegirUsuario" method="post" class="formulario">
+        <div class="campo">
+            <label asp-for="NombreUsuario"></label>
+            <div class="campo-usuario">
+                <span class="campo-prefijo" aria-hidden="true">@@</span>
+                <input asp-for="NombreUsuario" maxlength="30" placeholder="tu.nombre"
+                       autocomplete="username" autocapitalize="none" spellcheck="false"
+                       data-verificar-usuario data-estado="estado-usuario"
+                       aria-describedby="ayuda-usuario estado-usuario" />
+            </div>
+            <small id="ayuda-usuario" class="campo-ayuda">Minúsculas, números, punto y guion bajo.</small>
+            <span id="estado-usuario" class="estado-usuario" aria-live="polite"></span>
+            <span asp-validation-for="NombreUsuario" class="error"></span>
+        </div>
+
+        <button type="submit" class="boton-principal">Continuar</button>
+    </form>
+
+    <form asp-area="Identity" asp-page="/Account/Logout"
+          asp-route-returnUrl="@Url.Action("Index", "Home")" method="post" class="cerrar-sesion-texto">
+        <button type="submit">Cerrar sesión</button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/nombre-usuario.js" asp-append-version="true"></script>
+}

@@ -55,7 +55,21 @@
             <span asp-validation-for="AvatarUrl" class="error"></span>
         </fieldset>
 
-        <!-- ===== Nombre ===== -->
+        <!-- ===== Nombre de usuario ===== -->
+        <div class="campo">
+            <label asp-for="NombreUsuario"></label>
+            <div class="campo-usuario">
+                <span class="campo-prefijo" aria-hidden="true">@@</span>
+                <input asp-for="NombreUsuario" maxlength="30"
+                       autocomplete="username" autocapitalize="none" spellcheck="false"
+                       data-verificar-usuario data-estado="estado-usuario"
+                       aria-describedby="estado-usuario" />
+            </div>
+            <span id="estado-usuario" class="estado-usuario" aria-live="polite"></span>
+            <span asp-validation-for="NombreUsuario" class="error"></span>
+        </div>
+
+        <!-- ===== Nombre para mostrar ===== -->
         <div class="campo">
             <label asp-for="NombreMostrar"></label>
             <input asp-for="NombreMostrar" maxlength="100" autocomplete="nickname" />
@@ -91,6 +105,7 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/editor-avatar.js" asp-append-version="true"></script>
+    <script src="~/js/nombre-usuario.js" asp-append-version="true"></script>
     <script>
         // Contador de caracteres de la bio
         (function () {

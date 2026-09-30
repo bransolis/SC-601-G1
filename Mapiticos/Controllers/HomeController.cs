@@ -1,21 +1,25 @@
 using System.Diagnostics;
 using Mapiticos.Models;
+using System.Diagnostics;
+using Mapiticos.Filtros;
+using Mapiticos.Models;
+using Mapiticos.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mapiticos.Controllers
 {
-    [AllowAnonymous] // La página de inicio es pública
+    [AllowAnonymous]
+    [SinNombreUsuarioRequerido]
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            // Si ya inició sesión, no tiene sentido mostrarle el inicio
             if (User.Identity?.IsAuthenticated == true)
             {
                 return RedirectToAction("Index", "Feed");
             }
-            return View();
+            return View(new RegistroViewModel());
         }
 
         public IActionResult Privacy()

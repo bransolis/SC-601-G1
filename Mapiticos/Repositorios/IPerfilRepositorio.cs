@@ -6,6 +6,12 @@ namespace Mapiticos.Repositorios
     {
         Task<PerfilViewModel?> ObtenerPerfilAsync(string usuarioId);
         Task<EditarPerfilViewModel?> ObtenerParaEditarAsync(string usuarioId);
-        Task GuardarAsync(string usuarioId, EditarPerfilViewModel datos);
+
+        // Devuelve false si el @usuario ya lo tiene otra persona
+        Task<bool> GuardarAsync(string usuarioId, EditarPerfilViewModel datos);
+
+        Task<string?> ObtenerNombreUsuarioAsync(string usuarioId);
+        Task<bool> NombreUsuarioDisponibleAsync(string nombreUsuario, string usuarioId);
+        Task<bool> AsignarNombreUsuarioAsync(string usuarioId, string nombreUsuario);
     }
 }

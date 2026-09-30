@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Mapiticos.Models.ViewModels.RegistroViewModel
+@{
     ViewData["Title"] = "Bienvenida";
 }
 
@@ -104,22 +105,42 @@
             <p>Crear tu cuenta es gratis y toma menos de un minuto.</p>
         </div>
 
-        <form class="registro-form" asp-area="Identity" asp-page="/Account/Register" method="post">
+        <form class="registro-form" asp-controller="Cuenta" asp-action="Registrar" asp-fragment="registro" method="post">
+            <div asp-validation-summary="ModelOnly" class="resumen-errores"></div>
+
             <div class="campo">
-                <label for="correo">Correo electrónico</label>
-                <input id="correo" name="Input.Email" type="email" autocomplete="email"
-                       placeholder="tucorreo@ejemplo.com" required />
+                <label asp-for="Correo"></label>
+                <input asp-for="Correo" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" />
+                <span asp-validation-for="Correo" class="error"></span>
             </div>
+
             <div class="campo">
-                <label for="clave">Contraseña</label>
-                <input id="clave" name="Input.Password" type="password" autocomplete="new-password"
-                       minlength="6" aria-describedby="clave-ayuda" required />
+                <label asp-for="NombreUsuario"></label>
+                <div class="campo-usuario">
+                    <span class="campo-prefijo" aria-hidden="true">@@</span>
+                    <input asp-for="NombreUsuario" maxlength="30" placeholder="tu.nombre"
+                           autocomplete="username" autocapitalize="none" spellcheck="false"
+                           data-verificar-usuario data-estado="estado-usuario"
+                           data-url="@Url.Action("UsuarioDisponible", "Cuenta")"
+                           aria-describedby="estado-usuario" />
+                </div>
+                <span id="estado-usuario" class="estado-usuario" aria-live="polite"></span>
+                <span asp-validation-for="NombreUsuario" class="error"></span>
+            </div>
+
+            <div class="campo">
+                <label asp-for="Clave"></label>
+                <input asp-for="Clave" autocomplete="new-password" aria-describedby="clave-ayuda" />
                 <small id="clave-ayuda">Mínimo 6 caracteres, con mayúscula, minúscula, número y símbolo.</small>
+                <span asp-validation-for="Clave" class="error"></span>
             </div>
+
             <div class="campo">
-                <label for="clave2">Confirmá la contraseña</label>
-                <input id="clave2" name="Input.ConfirmPassword" type="password" autocomplete="new-password" required />
+                <label asp-for="ConfirmarClave"></label>
+                <input asp-for="ConfirmarClave" autocomplete="new-password" />
+                <span asp-validation-for="ConfirmarClave" class="error"></span>
             </div>
+
             <button type="submit" class="boton-principal">Crear mi cuenta</button>
             <p class="registro-login">
                 ¿Ya tenés cuenta? <a asp-area="Identity" asp-page="/Account/Login">Iniciá sesión</a>

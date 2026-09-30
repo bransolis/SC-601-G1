@@ -9,7 +9,7 @@
         });
     }
 
-    // Partes con flechitas ◀ ▶  ('' = Ninguno)
+    // Partes con flechitas  ('' = Ninguno)
     const PARTES = [
         { clave: 'hair', nombre: 'Pelo', opciones: rango('short', 19).concat(rango('long', 26)) },
         { clave: 'eyes', nombre: 'Ojos', opciones: rango('variant', 26) },
@@ -28,7 +28,7 @@
         { clave: 'backgroundColor', nombre: 'Fondo', opciones: ['dce6cb', 'c5d3ac', 'b7d2d4', 'f3f6ec', 'e9d8ef', 'f6e3c8'] }
     ];
 
-    // Avatar por defecto
+    // Avatar por defecto (podés cambiar estos números por una carita que te guste)
     const estado = {
         hair: 'short01', eyes: 'variant01', eyebrows: 'variant01', mouth: 'variant01',
         glasses: '', earrings: '', features: '',
@@ -133,7 +133,7 @@
         return boton;
     }
 
-    // ===== Construir las filas de partes =====
+    // ===== Filas de partes =====
     const contenedorPartes = document.getElementById('avatar-partes');
     PARTES.forEach(function (parte) {
         const fila = document.createElement('div');
@@ -157,7 +157,7 @@
         contenedorPartes.append(fila);
     });
 
-    // ===== Construir las bolitas de color =====
+    // ===== Bolitas de color =====
     const contenedorColores = document.getElementById('avatar-colores');
     COLORES.forEach(function (grupo) {
         const bloque = document.createElement('div');

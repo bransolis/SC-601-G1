@@ -8,30 +8,30 @@ namespace Mapiticos.Repositorios
     {
         private readonly string _cadenaConexion;
 
+        // Códigos de error de SQL Server cuando se viola un índice único
+        private const int ErrorDuplicado1 = 2601;
+        private const int ErrorDuplicado2 = 2627;
+
         public PerfilRepositorio(IConfiguration configuracion)
         {
             _cadenaConexion = configuracion.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("No se encontró la cadena de conexión 'DefaultConnection'.");
         }
 
-        // ===== Perfil completo (pantalla Perfil) =====
+        private SqlCommand CrearComando(SqlConnection conexion, string procedimiento) =>
+            new(procedimiento, conexion) { CommandType = CommandType.StoredProcedure };
+
+        // ===== Perfil completo =====
         public async Task<PerfilViewModel?> ObtenerPerfilAsync(string usuarioId)
         {
             using var conexion = new SqlConnection(_cadenaConexion);
-            using var comando = new SqlCommand("sp_Perfil_Obtener", conexion)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
+            using var comando = CrearComando(conexion, "sp_Perfil_Obtener");
             comando.Parameters.Add("@UsuarioId", SqlDbType.NVarChar, 450).Value = usuarioId;
 
             await conexion.OpenAsync();
             using var lector = await comando.ExecuteReaderAsync();
 
-            // Resultado 1: datos del perfil
-            if (!await lector.ReadAsync())
-            {
-                return null;
-            }
+            if (!await lector.ReadAsync()) return null;
 
             var perfil = new PerfilViewModel
             {
@@ -44,10 +44,8 @@ namespace Mapiticos.Repositorios
                 CantidadSiguiendo = lector.GetInt32(lector.GetOrdinal("CantidadSiguiendo"))
             };
 
-            // Resultado 2: aventuras
             await lector.NextResultAsync();
             var aventurasPorId = new Dictionary<int, AventuraMiniaturaViewModel>();
-
             while (await lector.ReadAsync())
             {
                 var aventura = new AventuraMiniaturaViewModel
@@ -60,9 +58,7 @@ namespace Mapiticos.Repositorios
                 aventurasPorId[aventura.AventuraId] = aventura;
             }
 
-            // Resultado 3: etiquetas
             await lector.NextResultAsync();
-
             while (await lector.ReadAsync())
             {
                 var aventuraId = lector.GetInt32(lector.GetOrdinal("AventuraId"));
@@ -79,23 +75,17 @@ namespace Mapiticos.Repositorios
             return perfil;
         }
 
-        // ===== Datos para el formulario de Editar perfil =====
+        // ===== Datos para Editar perfil =====
         public async Task<EditarPerfilViewModel?> ObtenerParaEditarAsync(string usuarioId)
         {
             using var conexion = new SqlConnection(_cadenaConexion);
-            using var comando = new SqlCommand("sp_Perfil_ObtenerParaEditar", conexion)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
+            using var comando = CrearComando(conexion, "sp_Perfil_ObtenerParaEditar");
             comando.Parameters.Add("@UsuarioId", SqlDbType.NVarChar, 450).Value = usuarioId;
 
             await conexion.OpenAsync();
             using var lector = await comando.ExecuteReaderAsync();
 
-            if (!await lector.ReadAsync())
-            {
-                return null;
-            }
+            if (!await lector.ReadAsync()) return null;
 
             return new EditarPerfilViewModel
             {
@@ -107,16 +97,14 @@ namespace Mapiticos.Repositorios
             };
         }
 
-        // ===== Guardar los cambios del perfil =====
-        public async Task GuardarAsync(string usuarioId, EditarPerfilViewModel datos)
+        // ===== Guardar perfil =====
+        public async Task<bool> GuardarAsync(string usuarioId, EditarPerfilViewModel datos)
         {
             using var conexion = new SqlConnection(_cadenaConexion);
-            using var comando = new SqlCommand("sp_Perfil_Guardar", conexion)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
+            using var comando = CrearComando(conexion, "sp_Perfil_Guardar");
 
             comando.Parameters.Add("@UsuarioId", SqlDbType.NVarChar, 450).Value = usuarioId;
+            comando.Parameters.Add("@NombreUsuario", SqlDbType.NVarChar, 30).Value = datos.NombreUsuario;
             comando.Parameters.Add("@NombreMostrar", SqlDbType.NVarChar, 100).Value = datos.NombreMostrar.Trim();
             comando.Parameters.Add("@Biografia", SqlDbType.NVarChar, 300).Value =
                 string.IsNullOrWhiteSpace(datos.Biografia) ? DBNull.Value : datos.Biografia.Trim();
@@ -125,7 +113,60 @@ namespace Mapiticos.Repositorios
             comando.Parameters.Add("@EsPrivada", SqlDbType.Bit).Value = datos.EsPrivada;
 
             await conexion.OpenAsync();
-            await comando.ExecuteNonQueryAsync();
+            try
+            {
+                await comando.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch (SqlException ex) when (ex.Number == ErrorDuplicado1 || ex.Number == ErrorDuplicado2)
+            {
+                return false; // otra persona ya tiene ese @usuario
+            }
+        }
+
+        // ===== ¿Ya eligió su @usuario? =====
+        public async Task<string?> ObtenerNombreUsuarioAsync(string usuarioId)
+        {
+            using var conexion = new SqlConnection(_cadenaConexion);
+            using var comando = CrearComando(conexion, "sp_Perfil_ObtenerNombreUsuario");
+            comando.Parameters.Add("@UsuarioId", SqlDbType.NVarChar, 450).Value = usuarioId;
+
+            await conexion.OpenAsync();
+            var resultado = await comando.ExecuteScalarAsync();
+            return resultado as string;
+        }
+
+        // ===== ¿Está disponible? =====
+        public async Task<bool> NombreUsuarioDisponibleAsync(string nombreUsuario, string usuarioId)
+        {
+            using var conexion = new SqlConnection(_cadenaConexion);
+            using var comando = CrearComando(conexion, "sp_Perfil_NombreUsuarioDisponible");
+            comando.Parameters.Add("@NombreUsuario", SqlDbType.NVarChar, 30).Value = nombreUsuario;
+            comando.Parameters.Add("@UsuarioId", SqlDbType.NVarChar, 450).Value = usuarioId;
+
+            await conexion.OpenAsync();
+            var resultado = await comando.ExecuteScalarAsync();
+            return resultado is bool disponible && disponible;
+        }
+
+        // ===== Asignar el @usuario =====
+        public async Task<bool> AsignarNombreUsuarioAsync(string usuarioId, string nombreUsuario)
+        {
+            using var conexion = new SqlConnection(_cadenaConexion);
+            using var comando = CrearComando(conexion, "sp_Perfil_AsignarNombreUsuario");
+            comando.Parameters.Add("@UsuarioId", SqlDbType.NVarChar, 450).Value = usuarioId;
+            comando.Parameters.Add("@NombreUsuario", SqlDbType.NVarChar, 30).Value = nombreUsuario;
+
+            await conexion.OpenAsync();
+            try
+            {
+                await comando.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch (SqlException ex) when (ex.Number == ErrorDuplicado1 || ex.Number == ErrorDuplicado2)
+            {
+                return false;
+            }
         }
     }
 }
